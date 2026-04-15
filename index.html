@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Test Market</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f5f5f5;
+}
+
+/* NAVBAR */
+header {
+  background:  rgb(0, 157, 255);
+  color: rgb(12, 1, 12);
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+header input {
+  width: 30%;
+  padding: 2px;
+  border-radius: 2px;
+  border: none;
+}
+
+/* BANNER */
+.banner {
+  height: 5px;
+  background: url('https://via.placeholder.com/800x150') center/cover;
+}
+
+/* SECTION */
+.section {
+  background: rgb(0, 157, 255);
+  margin: 10px;
+  padding: 10px;
+}
+
+.section h3 {
+  color: #040b05;
+}
+
+/* GRID */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+  gap: 10px;
+}
+
+/* CARD */
+.card {
+  background: rgb(239, 240, 237);
+  padding: 8px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.card img {
+  width: 100%;
+}
+
+/* BADGE */
+.badge {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background:  rgb(68, 36, 247);
+  color: white;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.badge2 {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgb(68, 36, 247);
+  color: rgb(233, 235, 233);
+  font-size: 10px;
+  padding: 2px 5px;
+}
+
+/* PRICE */
+.price {
+  color: rgb(31, 2, 196);
+  font-weight: bold;
+}
+
+.old {
+  text-decoration: line-through;
+  color:rgb(31, 2, 196);
+  font-size: 12px;
+}
+
+/* RATING */
+.rating {
+  color: rgb(31, 2, 196);
+  font-size: 13px;
+}
+
+/* STORE */
+.store {
+  font-size: 11px;
+  color: rgb(14, 1, 1);
+}
+
+/* PROGRESS BAR */
+.bar {
+  background: #ddd;
+  height: 5px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+.fill {
+  height: 5px;
+  background:rgb(35, 193, 237);
+  border-radius: 5px;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+  border: none;
+  background: rgb(8, 11, 0);
+  color: rgb(11, 187, 236);
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>Test Market</h2>
+  <input type="text" placeholder="Cari produk..." id="search">
+  ❤️ <span id="wish">0</span>
+  🛒 <span id="cart">0</span>
+</header>
+
+<div class="banner"></div>
+
+<div class="section">
+  <h3>🔥 Flash Sale <span id="timer"></span></h3>
+  <div class="products" id="flash"></div>
+</div>
+
+<div class="section">
+  <h3>Rekomendasi</h3>
+  <div class="products" id="list"></div>
+</div>
+
+<script>
+let cart=0, wish=0;
+
+// DATA
+const flashSale=[
+{
+ name:"Sepatu Boot Diskon",
+ price:120000,
+ old:250000,
+ rating:4.8,
+ review:200,
+ sold:90,
+ stock:100,
+ store:"Toko Sepatu Terbaik",
+ location:"Jakarta",
+ img:"https://down-id.img.susercontent.com/file/id-11134207-7r992-lyjirx491d5n29"
+}
+];
+
+const products=[
+{
+ name:"Karung Goni",
+ price:150000,
+ rating:4.7,
+ review:80,
+ sold:40,
+ stock:100,
+ store:"Toko Goni Terbaik",
+ location:"Bandung",
+ img:"https://media.istockphoto.com/photos/empty-burlap-sack-or-sackcloth-bag-isolated-on-white-background-picture-id1057471440?k=20&m=1057471440&s=612x612&w=0&h=LhvwWSQ-EMVgZAesMf1uem_DpA5dQbhX90WmKkYbWDY="
+}
+];
+
+// RENDER
+function show(data, el, flash=false){
+ el.innerHTML="";
+ data.forEach(p=>{
+ let percent=(p.sold/p.stock)*100;
+
+ el.innerHTML+=`
+ <div class="card">
+
+   <div class="badge">Terlaris</div>
+   <div class="badge2">Gratis Ongkir</div>
+
+   <img src="${p.img}">
+   <h4>${p.name}</h4>
+
+   <div class="store">${p.store} • ${p.location}</div>
+
+   <div class="rating">⭐ ${p.rating} (${p.review})</div>
+
+   ${flash ? `<div class="old">Rp ${p.old}</div>`:""}
+
+   <div class="price">Rp ${p.price}</div>
+
+   <div class="bar">
+     <div class="fill" style="width:${percent}%"></div>
+   </div>
+   <small>Tersisa ${p.stock - p.sold}</small>
+
+   <button onclick="addCart()">+ Keranjang</button>
+   <button onclick="addWish()">❤️ Wishlist</button>
+
+ </div>`;
+ });
+}
+
+show(flashSale, document.getElementById("flash"), true);
+show(products, document.getElementById("list"));
+
+// CART & WISH
+function addCart(){
+ cart++;
+ document.getElementById("cart").innerText=cart;
+}
+function addWish(){
+ wish++;
+ document.getElementById("wish").innerText=wish;
+}
+
+// SEARCH
+document.getElementById("search").addEventListener("input",function(){
+ let val=this.value.toLowerCase();
+ let filter=products.filter(p=>p.name.toLowerCase().includes(val));
+ show(filter,document.getElementById("list"));
+});
+
+// COUNTDOWN
+let t=7200;
+setInterval(()=>{
+ let h=Math.floor(t/3600);
+ let m=Math.floor((t%3600)/60);
+ let s=t%60;
+ document.getElementById("timer").innerText=`${h}j ${m}m ${s}d`;
+ t--; if(t<0) t=7200;
+},1000);
+</script>
+
+</body>
+</html>
